@@ -52,7 +52,7 @@ function MeetupDetails(props) {
 // This fcn is needed if we use getStaticProps() !!
 // We need to describe all the dynamic segments (pre-generate paths) for all the meetupId values that a user might be entering at the runtime.
 export async function getStaticPaths() {
-    const client = await MongoClient.connect(`mongodb+srv://${process.env.dbUser}:${process.env.dbPassword}@cluster0.kg7ic.azure.mongodb.net/${process.env.dbName}?retryWrites=true&w=majority`);
+    const client = await MongoClient.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.kg7ic.azure.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`);
     const db = client.db();
     const meetupsCollection = db.collection('meetups');
 
@@ -103,7 +103,7 @@ export async function getStaticProps(context) {
     // console.log('meetupId is:', meetupId); // This will be seen on the serve-side console !!
 
     // Get one document from collection based upon the id (meetupId).
-    const client = await MongoClient.connect(`mongodb+srv://${process.env.dbUser}:${process.env.dbPassword}@cluster0.kg7ic.azure.mongodb.net/${process.env.dbName}?retryWrites=true&w=majority`);
+    const client = await MongoClient.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.kg7ic.azure.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`);
     const db = client.db();
     const meetupsCollection = db.collection('meetups');
 

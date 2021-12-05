@@ -38,7 +38,7 @@ function HomePage(props) { // Here, "props" are from getStaticProps()
 export async function getStaticProps() {
     // Fetch data from API, DB, fs...
    
-    const client = await MongoClient.connect(`mongodb+srv://${process.env.dbUser}:${process.env.dbPassword}@cluster0.kg7ic.azure.mongodb.net/${process.env.dbName}?retryWrites=true&w=majority`);
+    const client = await MongoClient.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.kg7ic.azure.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`);
 
     const db = client.db();
 
