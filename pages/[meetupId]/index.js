@@ -61,7 +61,9 @@ export async function getStaticPaths() {
     client.close();
 
     return {
-        fallback: false, // Means we have declared all the supported paths. If true, the app will generate a page for requested id, even if it is not in the paths array.
+        fallback: 'blocking', // min 03.09.00 - If set to "false" will generate a 404 error in production mode bcs, after a new meetup was created, there are not instruction to pre-render the new meetup. Instead, we will use "true" or "blocking", and we will use blocking bcs extra handle from my paert is not necessary.
+
+        // fallback: false, // Means we have declared all the supported paths. If true, the app will generate a page for requested id, even if it is not in the paths array.
 
         // Now we generate the paths dinamically.
         // Be aware of writting map: ->> map(item => ({ object })) !!!
