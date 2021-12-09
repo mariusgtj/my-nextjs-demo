@@ -54,7 +54,7 @@ function MeetupDetails(props) {
 export async function getStaticPaths() {
     const client = await MongoClient.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.kg7ic.azure.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`);
     const db = client.db();
-    const meetupsCollection = db.collection('meetups');
+    const meetupsCollection = db.collection(`${process.env.DB_NAME}`);
 
     const meetups = await meetupsCollection.find({}, { _id: 1}).toArray(); // find->> first{}===noFilterCriteria (will give me all the meetups/documents==the collection), second {}===which fields do I need from every doument in the collection.
 
@@ -63,6 +63,7 @@ export async function getStaticPaths() {
     return {
         fallback: 'blocking', // min 03.09.00 - If set to "false" will generate a 404 error in production mode bcs, after a new meetup was created, there are not instruction to pre-render the new meetup. Instead, we will use "true" or "blocking", and we will use blocking bcs extra handle from my paert is not necessary.
 
+        // // In dev mode I used this:
         // fallback: false, // Means we have declared all the supported paths. If true, the app will generate a page for requested id, even if it is not in the paths array.
 
         // Now we generate the paths dinamically.
@@ -105,18 +106,20 @@ export async function getStaticProps(context) {
     // Get one document from collection based upon the id (meetupId).
     const client = await MongoClient.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.kg7ic.azure.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`);
     const db = client.db();
-    const meetupsCollection = db.collection('meetups');
+    const meetupsCollection = db.collection(`${process.env.DB_NAME}`);
 
     // // *** Using JSON.parse(JSON.stringify()) ***
     // const response = await meetupsCollection.findOne({_id: ObjectId(meetupId)}); 
     // const selectedMeetup = await JSON.parse(JSON.stringify(response)); // !!! ok
     // // ******************************************
 
+
     // // *** Without JSON.parse(JSON.stringify()) ***
     const selectedMeetup = await meetupsCollection.findOne({_id: ObjectId(meetupId)}); 
 
     // // ******************************************
 
+    
     // console.log('selectedMeetup is:', selectedMeetup);
 
     client.close();
@@ -134,7 +137,7 @@ export async function getStaticProps(context) {
             }
         }
 
-        // // This is together with the JSON.parse(JSON.stringify())
+        // // This works together with the JSON.parse(JSON.stringify())
         // props: {
         //     meetupData: selectedMeetup,
         // }

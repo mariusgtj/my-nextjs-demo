@@ -1,24 +1,15 @@
-// import { useEffect, useState } from 'react';  // We not longer need this bcs we use getStaticProps()
+// import { useEffect, useState } from 'react';  // We don't need this bcs we use getStaticProps()
 import { Fragment } from 'react';
 import Head from 'next/head';
 import { MongoClient } from 'mongodb'; // Min 2.30.00 important concepts explained !!!
 import MeetupList from '../components/meetups/MeetupList';
 
 
-// ------ This is with getStaticProps() ------
+// --------- This is with getStaticProps() ------------
 /**
  **/
 
 function HomePage(props) { // Here, "props" are from getStaticProps()
-
-    // const [loadedMeetups, setLoadedMeetups] = useState([]); // We not longer need this bcs we use getStaticProps()
-
-    // useEffect(() => {  // We not longer need this bcs we use getStaticProps()
-    //     // send a http request and fetch data
-    //     setLoadedMeetups(DUMMY_MEETUPS);
-    // }, []);
-
-    // return <MeetupList meetups={loadedMeetups} />  // We not longer need this bcs we use getStaticProps()
 
     return (
         <Fragment>
@@ -38,11 +29,17 @@ function HomePage(props) { // Here, "props" are from getStaticProps()
 export async function getStaticProps() {
     // Fetch data from API, DB, fs...
    
+    // Sources for Environment Variables: 
+    // https://nextjs.org/docs/basic-features/environment-variables
+    // https://vercel.com/docs/concepts/projects/environment-variables
+    // env vars are set in development - .env.local - and in Vercel Project - see the link above.
+    // Be aware: in dev, env vars are declared into a file made by me: .env.local
+
     const client = await MongoClient.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.kg7ic.azure.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`);
 
     const db = client.db();
 
-    const meetupsCollection = db.collection('meetups');
+    const meetupsCollection = db.collection(`${process.env.DB_NAME}`);
 
     const meetups = await meetupsCollection.find().toArray(); // Find all collections
 
@@ -67,11 +64,11 @@ export async function getStaticProps() {
 // ------------------------------------------------------------------------
 
 
-// // ------ With getServerSideProps() ->> an alternative to the getStaticProps() fcn ------
+// // ------ With getServerSideProps() ->> an alternative to the getStaticProps() fcn ----------------------------------------------
 
-// function HomePage(props) { // Here, "props" are from getStaticProps()
+// function HomePage(props) { // Here, "props" are from getServerSideProps()
 
-//     return <MeetupList meetups={props.meetups} /> // props received from getStaticProps()
+//     return <MeetupList meetups={props.meetups} /> 
 // }
 
 // export async function getServerSideProps(context) {
@@ -108,7 +105,7 @@ export async function getStaticProps() {
 // }
 // // ------------------------------------------------------------------------
 
-// // ------------- This is with dummie data --------------------------
+// // ------------- Dummie data --------------------------
 // const DUMMY_MEETUPS = [
 //     {
 //         id: 'm1',
